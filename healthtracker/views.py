@@ -1,12 +1,21 @@
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+
+from healthtracker.serializers import RegisterSerializer
 
 
 # Create your views here.
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]  #anyone can register
+    serializer_class = RegisterSerializer
+
 class LoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(LoginView, self).post(request, *args, **kwargs)
