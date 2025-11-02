@@ -29,8 +29,8 @@ SECRET_KEY = 'django-insecure-@^cyu#2g4%c@15y#3b=khr-z21y=cr!2gsr$@fen(8bi)0c$zz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS = ['healthtrack-backend-88y4g7mo0-nathalie-arcolas-projects.vercel.app']
+ALLOWED_HOSTS = ["*"]
+#ALLOWED_HOSTS = ['healthtrack-backend-88y4g7mo0-nathalie-arcolas-projects.vercel.app']
 
 # Application definition
 
