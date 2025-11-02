@@ -8,7 +8,8 @@ class Activity(models.Model):
         ('steps', 'Steps'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
     activity_type = models.CharField(max_length=20, choices=ACTIVITY_TYPES)
     description = models.TextField(blank=True)

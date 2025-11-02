@@ -8,7 +8,7 @@ class ActivitySerializer(ModelSerializer):
 
     class Meta:
         model = Activity
-        #fields = '__all__'
-        fields = ['id', 'name', 'activity_type', 'description', 'calories', 'duration', 'date_logged', 'user']
+        fields = '__all__'
+        #fields = ['id', 'name', 'activity_type', 'description', 'calories', 'duration', 'date_logged', 'user']
 
 
