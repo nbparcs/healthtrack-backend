@@ -3,6 +3,10 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+
+from healthtracker.models import Activity
+
+
 # Create your tests here.
 
 class LoginAPITest(APITestCase):
@@ -41,3 +45,41 @@ class LogoutAPITest(APITestCase):
         # No token — unauthorized
         response = self.client.post(self.logout_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+class ActivityAPITest(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+        self.url = reverse('activity-list')
+
+    def test_create_activity(self):
+        data = {
+            'name': 'Morning Run',
+            'activity_type': 'workout',
+            'description': 'Ran 5km around the park',
+            'calories': 300,
+            'duration': 30
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_update_activity(self):
+        activity = Activity.objects.create(
+            user=self.user, name='Yoga', activity_type='workout', duration=20, calories=150
+        )
+        url = reverse('activity-detail', args=[activity.id])
+        response = self.client.put(url, {
+            'name': 'Evening Yoga',
+            'activity_type': 'workout',
+            'duration': 45,
+            'calories': 250
+        })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_delete_activity(self):
+        activity = Activity.objects.create(
+            user=self.user, name='Lunch', activity_type='meal', calories=600
+        )
+        url = reverse('activity-detail', args=[activity.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

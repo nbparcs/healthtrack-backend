@@ -12,6 +12,7 @@ class ActivitySerializer(ModelSerializer):
         model = Activity
         fields = '__all__'
         #fields = ['id', 'name', 'activity_type', 'description', 'calories', 'duration', 'date_logged', 'user']
+        read_only_fields = ['user', 'date_logged']
 
 
 class RegisterSerializer(serializers.ModelSerializer):
