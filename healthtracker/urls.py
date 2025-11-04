@@ -6,7 +6,7 @@ from healthtracker.viewsets import ActivityViewSet
 from healthtracker.views import LoginView, LogoutView, RegisterView
 
 router = DefaultRouter()
-router.register(r'activities', ActivityViewSet, basename='activities')
+router.register(r'activities', ActivityViewSet, basename='activity')
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegisterView.as_view(), name='register'),

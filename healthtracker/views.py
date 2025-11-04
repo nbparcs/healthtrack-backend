@@ -1,12 +1,13 @@
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from healthtracker.serializers import RegisterSerializer
+from healthtracker.models import Activity
+from healthtracker.serializers import RegisterSerializer, ActivitySerializer
 
 
 # Create your views here.
@@ -27,3 +28,13 @@ class LogoutView(generics.GenericAPIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=200)
+
+class ActivityViewSet(viewsets.ModelViewSet):
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Activity.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
