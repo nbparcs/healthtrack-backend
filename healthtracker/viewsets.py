@@ -11,9 +11,15 @@ class ActivityViewSet(viewsets.ModelViewSet):
         return Activity.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        # Set default status if not provided and assign the logged-in user
-        if 'status' not in serializer.validated_data:
-            serializer.validated_data['status'] = 'planned'
-        serializer.save(user=self.request.user)
+        # Ensure status is set to 'planned' if not provided
+        status = serializer.validated_data.get('status', 'planned')
+        if status not in dict(Activity.STATUS_CHOICES).keys():
+            status = 'planned'
+        
+        # Save with the user and validated status
+        serializer.save(
+            user=self.request.user,
+            status=status
+        )
 
 

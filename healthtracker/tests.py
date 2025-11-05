@@ -86,7 +86,8 @@ class ActivityAPITest(APITestCase):
             'activity_type': 'workout',
             'description': 'Ran 5km',
             'calories': 300,
-            'duration': 30
+            'duration': 30,
+            'status': 'planned'
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
