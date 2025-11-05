@@ -20,7 +20,7 @@ class Activity(models.Model):
     description = models.TextField(blank=True)
     calories = models.IntegerField(null=True, blank=True)
     duration = models.IntegerField(null=True, blank=True)  # minutes
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='planned')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     date_logged = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
