@@ -1,0 +1,227 @@
+{
+  "info": {
+    "name": "HealthTracker API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "c9a7e8d0-1234-5678-90ab-cdef12345678"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"test@example.com\",\n    \"password\": \"testpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/register/",
+              "host": ["{{base_url}}"],
+              "path": ["register", ""],
+              "query": []
+            },
+            "description": "Register a new user"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"testpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"],
+              "query": []
+            },
+            "description": "Login and get authentication token"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Logout the current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Activities",
+      "item": [
+        {
+          "name": "List Activities",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/activities/",
+              "host": ["{{base_url}}"],
+              "path": ["activities", ""],
+              "query": []
+            },
+            "description": "Get all activities for the authenticated user"
+          }
+        },
+        {
+          "name": "Create Activity",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Morning Run\",\n    \"description\": \"5k morning run\",\n    \"activity_type\": \"RUN\",\n    \"duration\": 1800,\n    \"distance\": 5.0,\n    \"calories_burned\": 350,\n    \"date\": \"2023-11-08\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/activities/",
+              "host": ["{{base_url}}"],
+              "path": ["activities", ""],
+              "query": []
+            },
+            "description": "Create a new activity"
+          }
+        },
+        {
+          "name": "Get Activity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/activities/1/",
+              "host": ["{{base_url}}"],
+              "path": ["activities", "1", ""],
+              "query": []
+            },
+            "description": "Get details of a specific activity"
+          }
+        },
+        {
+          "name": "Update Activity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Morning Run\",\n    \"description\": \"5k morning run - updated\",\n    \"activity_type\": \"RUN\",\n    \"duration\": 2000,\n    \"distance\": 5.5,\n    \"calories_burned\": 400,\n    \"date\": \"2023-11-08\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/activities/1/",
+              "host": ["{{base_url}}"],
+              "path": ["activities", "1", ""],
+              "query": []
+            },
+            "description": "Update an existing activity"
+          }
+        },
+        {
+          "name": "Delete Activity",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/activities/1/",
+              "host": ["{{base_url}}"],
+              "path": ["activities", "1", ""],
+              "query": []
+            },
+            "description": "Delete an activity"
+          }
+        },
+        {
+          "name": "Mark Activity as Completed",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Token {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/activities/1/complete/",
+              "host": ["{{base_url}}"],
+              "path": ["activities", "1", "complete", ""],
+              "query": []
+            },
+            "description": "Mark an activity as completed"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string",
+      "description": "Base URL for the API"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string",
+      "description": "Authentication token obtained from login"
+    }
+  ]
+}
