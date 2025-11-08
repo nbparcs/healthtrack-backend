@@ -154,3 +154,61 @@ class ActivityAPITest(APITestCase):
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+from django.contrib.auth.models import User
+from django.urls import reverse
+from rest_framework.test import APITestCase, APIClient
+from rest_framework import status
+from healthtracker.models import Activity
+
+
+class MarkActivityCompletedTest(APITestCase):
+    def setUp(self):
+        # Create a user and authenticate
+        self.user = User.objects.create_user(username='testuser', password='password123')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        # Create another user to test ownership restriction
+        self.other_user = User.objects.create_user(username='otheruser', password='password123')
+
+        # Create an activity for the test user
+        self.activity = Activity.objects.create(
+            user=self.user,
+            name='Morning Run',
+            status='pending'
+        )
+
+        # Create an activity for another user
+        self.other_activity = Activity.objects.create(
+            user=self.other_user,
+            name='Evening Yoga',
+            status='pending'
+        )
+
+    def test_mark_activity_completed_success(self):
+        """Test marking an activity as completed successfully."""
+        url = reverse('mark_activity_completed', args=[self.activity.id])
+        response = self.client.post(url)
+
+        self.activity.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.activity.status, 'completed')
+        self.assertEqual(response.data['message'], 'Activity marked as completed successfully')
+
+    def test_mark_activity_completed_not_found(self):
+        """Test when trying to mark another user's activity."""
+        url = reverse('mark_activity_completed', args=[self.other_activity.id])
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data['error'], 'Activity not found')
+
+    def test_mark_activity_completed_invalid_id(self):
+        """Test when activity ID does not exist."""
+        url = reverse('mark_activity_completed', args=[999])  # Non-existent ID
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data['error'], 'Activity not found')

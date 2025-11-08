@@ -3,6 +3,7 @@ from rest_framework import generics, viewsets
 from rest_framework.authtoken.admin import User
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
@@ -11,6 +12,15 @@ from healthtracker.serializers import RegisterSerializer, ActivitySerializer
 
 
 # Create your views here.
+@api_view(['POST'])
+def mark_activity_completed(request, activity_id):
+    try:
+        activity = Activity.objects.get(id=activity_id, user=request.user)
+        activity.status = 'completed'
+        activity.save()
+        return Response({'message': 'Activity marked as completed successfully'})
+    except Activity.DoesNotExist:
+        return Response({'error': 'Activity not found'}, status=404)
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -28,6 +38,7 @@ class LogoutView(generics.GenericAPIView):
     def post(self, request):
         request.user.auth_token.delete()
         return Response(status=200)
+
 
 class ActivityViewSet(viewsets.ModelViewSet):
     serializer_class = ActivitySerializer
